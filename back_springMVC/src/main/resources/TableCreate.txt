@@ -1,0 +1,63 @@
+-- Table: public.accounts
+
+-- DROP TABLE IF EXISTS public.accounts;
+
+CREATE TABLE IF NOT EXISTS public.accounts
+(
+    accountid character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    accountname character varying(255) COLLATE pg_catalog."default",
+    headone character varying(255) COLLATE pg_catalog."default",
+    headtwo character varying(255) COLLATE pg_catalog."default",
+    headthree character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT accounts_pkey PRIMARY KEY (accountid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.accounts
+    OWNER to postgres;
+
+-- Table: public.mappings
+
+-- DROP TABLE IF EXISTS public.mappings;
+
+CREATE TABLE IF NOT EXISTS public.mappings
+(
+    mapid character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    transid character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    accountid character varying(255) COLLATE pg_catalog."default",
+    transtype character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    amount integer,
+    CONSTRAINT mappings_pkey PRIMARY KEY (mapid, transid, transtype),
+    CONSTRAINT mappings_accountid_fkey FOREIGN KEY (accountid)
+        REFERENCES public.accounts (accountid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT mappings_transid_fkey FOREIGN KEY (transid)
+        REFERENCES public.transactions (transid) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.mappings
+    OWNER to postgres;
+
+-- Table: public.transactions
+
+-- DROP TABLE IF EXISTS public.transactions;
+
+CREATE TABLE IF NOT EXISTS public.transactions
+(
+    transid character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    transdate character varying(255) COLLATE pg_catalog."default",
+    franchise character varying(255) COLLATE pg_catalog."default",
+    memo character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT transactions_pkey PRIMARY KEY (transid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.transactions
+    OWNER to postgres;
