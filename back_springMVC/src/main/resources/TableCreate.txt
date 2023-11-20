@@ -17,6 +17,25 @@ TABLESPACE pg_default;
 ALTER TABLE IF EXISTS public.accounts
     OWNER to postgres;
 
+
+-- Table: public.transactions
+
+-- DROP TABLE IF EXISTS public.transactions;
+
+CREATE TABLE IF NOT EXISTS public.transactions
+(
+    transid character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    transdate character varying(255) COLLATE pg_catalog."default",
+    franchise character varying(255) COLLATE pg_catalog."default",
+    memo character varying(255) COLLATE pg_catalog."default",
+    CONSTRAINT transactions_pkey PRIMARY KEY (transid)
+)
+
+TABLESPACE pg_default;
+
+ALTER TABLE IF EXISTS public.transactions
+    OWNER to postgres;
+
 -- Table: public.mappings
 
 -- DROP TABLE IF EXISTS public.mappings;
@@ -42,22 +61,4 @@ CREATE TABLE IF NOT EXISTS public.mappings
 TABLESPACE pg_default;
 
 ALTER TABLE IF EXISTS public.mappings
-    OWNER to postgres;
-
--- Table: public.transactions
-
--- DROP TABLE IF EXISTS public.transactions;
-
-CREATE TABLE IF NOT EXISTS public.transactions
-(
-    transid character varying(255) COLLATE pg_catalog."default" NOT NULL,
-    transdate character varying(255) COLLATE pg_catalog."default",
-    franchise character varying(255) COLLATE pg_catalog."default",
-    memo character varying(255) COLLATE pg_catalog."default",
-    CONSTRAINT transactions_pkey PRIMARY KEY (transid)
-)
-
-TABLESPACE pg_default;
-
-ALTER TABLE IF EXISTS public.transactions
     OWNER to postgres;
