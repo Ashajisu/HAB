@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
  *  page List
  *  "/" resources/static/index.html 권한불필요
  *  "/main/second" webapp/view/second.html 로그인필요 :
- *      spring.mvc.view.prefix=/WEB-INF/views/
+ *      spring.mvc.view.prefix=/WEB-INF/views/ -> /
  *      spring.mvc.view.suffix=.html
  * */
 @Controller
