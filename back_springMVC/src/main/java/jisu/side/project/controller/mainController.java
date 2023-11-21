@@ -22,8 +22,7 @@ public class mainController {
      * */
     @GetMapping("/second")
     public String second(){
-//        return "/second.html";
-        return "second";
+        return "second"; //application.properties 설정으로 return "/second.html"; 에서 간결해짐
     }
 
 }
