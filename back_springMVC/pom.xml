@@ -5,10 +5,13 @@
   <groupId>jisu.side.project</groupId>
   <artifactId>back_springMVC</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Archetype - back_springMVC</name>
+    <packaging>jar</packaging>
+    <name>Archetype - back_springMVC</name>
 
     <properties>
         <java.version>17</java.version>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -25,10 +28,6 @@
       <dependency>
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter-security</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-mustache</artifactId>
       </dependency>
       <dependency>
         <groupId>org.springframework.boot</groupId>
@@ -55,6 +54,43 @@
           <artifactId>poi-ooxml</artifactId>
           <version>5.2.3</version>
       </dependency>
-
   </dependencies>
+    <build>
+<!--jar 파일이름-->
+        <finalName>testJar</finalName>
+<!-- 없어도 기본값 src/main/resources 는 패키징에 포함됨-->
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--            </resource>-->
+<!--        </resources>-->
+<!--Maven 빌드시 manifest.mf에 mainclass 추가-->
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>jisu.side.project.Application</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+<!--Maven 빌드 후 다시 JAR 파일을 패키징해서, Spring Boot 애플리케이션이 내장된 서블릿 컨테이너와 함께 동작하게 함-->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+    </build>
 </project>
