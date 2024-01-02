@@ -37,7 +37,7 @@ public class SecurityConfig {
         http.csrf().disable().cors().disable()
                 .authorizeHttpRequests(request -> request
                         .dispatcherTypeMatchers(DispatcherType.FORWARD).permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin(login -> login
@@ -45,7 +45,7 @@ public class SecurityConfig {
 //                        .loginProcessingUrl("/login/process")
                         .usernameParameter("userid")
                         .passwordParameter("pw")
-                        .defaultSuccessUrl("/main/second", true)
+                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(withDefaults());
