@@ -1,5 +1,5 @@
 {
-  "name": "HAB",
+  "name": "hab",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@bundled-es-modules/axios": "^0.27.2",
+    "axios": "^1.6.3",
     "core-js": "^3.8.3",
     "flowbite": "^1.7.0",
     "js-cookie": "^3.0.5",

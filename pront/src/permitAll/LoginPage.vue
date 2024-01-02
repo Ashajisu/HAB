@@ -10,11 +10,11 @@
                                 class="form-head cursor-pointer"
                                 @click="$router.push('/')"
                         >
-                            <img
+                            <!-- <img
                                     src="../../../assets/logo/logo.svg"
                                     alt=""
                                     class="w-10"
-                            />
+                            /> -->
                         </div>
 
                         <div class="space-y-5">

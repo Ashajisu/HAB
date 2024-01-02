@@ -4,7 +4,6 @@
     <MenuNav></MenuNav>
   </div>
   <div class="body">
-      <p>body</p>
       <RouterView></RouterView>
   </div>
   <!-- End app -->
