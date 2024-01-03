@@ -1,21 +1,26 @@
 package jisu.side.project.security;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.SecurityBuilder;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import jakarta.servlet.DispatcherType;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+
+import javax.sql.DataSource;
+
+import static org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType.H2;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 /**
@@ -25,9 +30,9 @@ import static org.springframework.security.config.Customizer.withDefaults;
  *
  * 참고 https://covenant.tistory.com/277
  * */
-@Configuration
-@EnableMethodSecurity
-public class SecurityConfig {
+//@Configuration
+//@EnableMethodSecurity
+public class SecurityWithJdbcConfig {
 
     @Bean
     AuthenticationManager authenticationManager(
@@ -45,9 +50,9 @@ public class SecurityConfig {
                 .formLogin(login -> login
 //                        .loginPage("/view/login")
 //                        .loginProcessingUrl("/login/process")
+                        .defaultSuccessUrl("/", true)
                         .usernameParameter("userid")
                         .passwordParameter("pw")
-                        .defaultSuccessUrl("/", true)
                         .permitAll()
                 )
                 .logout(withDefaults());
@@ -55,20 +60,41 @@ public class SecurityConfig {
         return http.build();
     }
 
+//    @Bean
+//    public InMemoryUserDetailsManager userDetailsService() {
+//        UserDetails user = User.withDefaultPasswordEncoder()
+//                .username("userid")
+//                .password("pw")
+//                .roles("ADMIN")
+//                .build();
+//        return new InMemoryUserDetailsManager(user);
+//    }
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.withDefaultPasswordEncoder()
-                .username("userid")
-                .password("pw")
-                .roles("ADMIN")
+    DataSource dataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setType(H2)
+                .addScript(JdbcDaoImpl.DEFAULT_USER_SCHEMA_DDL_LOCATION)
                 .build();
-        return new InMemoryUserDetailsManager(user);
+    }
+    @Bean
+    UserDetailsManager users(DataSource dataSource) { //User 정보 쓰고 수정하는 interface
+
+        UserDetails user = User.builder()
+                .username("userid")
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("USER")
+                .build();
+        UserDetails admin = User.builder()
+                .username("adminid")
+                .password("{bcrypt}$2a$10$GRLdNijSQMUvl/au9ofL.eDwmoohzzS7.rmNSJZ.0FxO/BTk76klW")
+                .roles("USER", "ADMIN")
+                .build();
+        JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
+        users.createUser(user);
+        users.createUser(admin);
+        return users;
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    } // User service에서 사용해야함
 
     /** 이전버전
      *     @Bean
