@@ -20,15 +20,10 @@ public class User {
     @Column(name = "enabled", columnDefinition = "CHARACTER DEFAULT 'Y'" )
     private char enabled;
 
-//    @OneToOne(cascade = CascadeType.PERSIST)
-//    @JoinColumn(name = "username")
-//    private Auth auth;
-
     @Builder
     public User(String id, String password, char enabled){
         this.id = id;
         this.password = password;
         this.enabled = enabled;
     }
-
 }

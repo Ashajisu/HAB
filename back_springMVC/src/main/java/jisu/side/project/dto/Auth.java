@@ -7,6 +7,7 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
+@ToString
 @Table(name = "authorities")
 public class Auth {
 

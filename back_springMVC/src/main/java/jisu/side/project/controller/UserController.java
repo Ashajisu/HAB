@@ -1,5 +1,6 @@
 package jisu.side.project.controller;
 
+import jisu.side.project.dto.Auth;
 import jisu.side.project.dto.Role;
 import jisu.side.project.dto.user.User;
 import jisu.side.project.dto.user.UserDto;
@@ -21,11 +22,17 @@ public class UserController {
     private UserService userService;
 
     /** 가입 **/
-    @PostMapping("/sign")
-    public String singUser(@RequestBody UserDto user){
-        log.info("singUser : {}",user.toString());
-        userService.insert(user, Role.USER);
-        return user.getId();
+    @PostMapping("/sign/user")
+    public String insertUser(@RequestBody UserDto userDto){
+        log.info("insert : {}",userDto.toString());
+        userService.insert(userDto, Role.USER);
+        return userDto.getId();
+    }
+    @PostMapping("/sign/admin")
+    public String insertAdmin(@RequestBody UserDto userDto){
+        log.info("insert : {}",userDto.toString());
+        userService.insert(userDto, Role.ADMIN);
+        return userDto.getId();
     }
 
     /** 확인
@@ -33,20 +40,31 @@ public class UserController {
      *요청 URL 경로 변수에서 값을 가져오기 위해서는 PathVariable 어노테이션을 사용해야 합니다.
      * **/
     @GetMapping("/select/{username}")
-    public String whoIs (@PathVariable String username){
-        User ami = userService.isUser(username);
-        log.info("isUser : {}", ami);
-
-//        if(ami==null) ami=userService.isAdmin(username);
-//        log.info("ami : {}", ami);
-//        return ami!=null? ami.getAuth().getRole().toString() : "notUser";
-        return username;
+    public String select (@PathVariable String username){
+        User ami = userService.select(username);
+        log.info("select : {}", ami);
+        return ami.getId();
     }
+
+    /** 권한 **/
+    @GetMapping("/isuser/{username}")
+    public String isUser (@PathVariable String username){
+        Auth ami = userService.isUser(username);
+        log.info("isUser : {}", ami);
+        return ami.getRole().toString();
+    }
+
     /** 변경 **/
     @PostMapping("/change/pw")
     public String changePw (@RequestBody UserDto userDto){
         userService.changePw(userDto);
-        return userDto.getPassword();
+        return userDto.getId();
+    }
+
+    @PostMapping("/change/quit")
+    public String quit (@RequestBody UserDto userDto){
+        userService.quit(userDto);
+        return userDto.getId();
     }
 
 }

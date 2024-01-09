@@ -30,4 +30,8 @@ public class UserDto {
         return Auth.builder().id(id).role(role).build();
     }
 
+    public User toQuit(){
+        return User.builder().id(id).password(password).enabled('N').build();
+    }
+
 }
