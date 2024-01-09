@@ -1,4 +1,4 @@
-package jisu.side.project.dto;
+package jisu.side.project.dto.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
