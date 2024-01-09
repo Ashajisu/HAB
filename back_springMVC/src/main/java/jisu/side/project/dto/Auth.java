@@ -2,13 +2,9 @@ package jisu.side.project.dto;
 
 import jakarta.persistence.*;
 import jdk.jshell.Snippet;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 @Getter
 @Entity
 @Table(name = "authorities")
@@ -22,5 +18,10 @@ public class Auth {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Builder
+    public Auth(String id, Role role) {
+        this.id = id;
+        this.role = role;
+    }
 }
 
