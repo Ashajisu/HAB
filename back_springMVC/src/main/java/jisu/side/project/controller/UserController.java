@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.*;
 /**
  * jpa 작동 확인 _ security없이
  *  2024.01.09
+ *       * RequestParam 어노테이션은 쿼리 파라미터를 받아오기 위해 사용되며, username= ? 로 작성해야합니다.
+ *      *요청 URL 경로 변수에서 값을 가져오기 위해서는 PathVariable 어노테이션을 사용해야 합니다.
  * */
 @Slf4j
 @RestController
@@ -35,10 +37,7 @@ public class UserController {
         return userDto.getId();
     }
 
-    /** 확인
-     * RequestParam 어노테이션은 쿼리 파라미터를 받아오기 위해 사용되며, username= ? 로 작성해야합니다.
-     *요청 URL 경로 변수에서 값을 가져오기 위해서는 PathVariable 어노테이션을 사용해야 합니다.
-     * **/
+    /** 확인 **/
     @GetMapping("/select/{username}")
     public String select (@PathVariable String username){
         User ami = userService.select(username);
