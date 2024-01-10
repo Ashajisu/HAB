@@ -5,8 +5,10 @@ import jisu.side.project.dto.Role;
 import jisu.side.project.dto.user.User;
 import jisu.side.project.dto.user.UserDto;
 import jisu.side.project.dto.user.UserService;
+import jisu.side.project.security.SecurityUser;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,6 +37,21 @@ public class UserController {
         log.info("insert : {}",userDto.toString());
         userService.insert(userDto, Role.ADMIN);
         return userDto.getId();
+    }
+    /** 로그인 **/
+    @PostMapping("/sign/login")
+    public SecurityUser login (@RequestParam String id, @RequestParam String password){
+        log.info("login proccess : {}, {}",id,password);
+        UserDto userDto = new UserDto(id,password);
+        SecurityUser signin = userService.login(userDto);
+        return signin;
+    }
+
+    @GetMapping("/get/userid")
+    public String getUser(Authentication authentication){
+        log.info("authenticateion.getName : {}",authentication.getName());
+        User user = userService.select(authentication.getName());
+        return user.getId();
     }
 
     /** 확인 **/
@@ -65,5 +82,7 @@ public class UserController {
         userService.quit(userDto);
         return userDto.getId();
     }
+
+
 
 }

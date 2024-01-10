@@ -1,10 +1,12 @@
 package jisu.side.project.dto.user;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jisu.side.project.dto.Auth;
 import jisu.side.project.dto.Role;
 import lombok.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.validation.constraints.*;
 
 
 @Getter
@@ -21,8 +23,8 @@ public class UserDto {
     private String password;
 
 
-    public User toEntity() {
-        return User.builder().id(id).password(password).enabled('Y').build();
+    public User toEntity(PasswordEncoder encoder) {
+        return User.builder().id(id).password(encoder.encode(password)).enabled('Y').build();
         //.auth(new Auth(id,role)).build();
     }
 
@@ -30,8 +32,8 @@ public class UserDto {
         return Auth.builder().id(id).role(role).build();
     }
 
-    public User toQuit(){
-        return User.builder().id(id).password(password).enabled('N').build();
+    public User toQuit(PasswordEncoder encoder){
+        return User.builder().id(id).password(encoder.encode(password)).enabled('N').build();
     }
 
 }

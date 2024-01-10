@@ -16,4 +16,4 @@ postgresql
 3. 20240102 linked pront, trans page for url error
 4. 20240103 jpa entity, repository, service
 5. 20240109 jpa test OK (unused security)
-6. 
+6. 20240110 jpa & security login OK (jwt not using)

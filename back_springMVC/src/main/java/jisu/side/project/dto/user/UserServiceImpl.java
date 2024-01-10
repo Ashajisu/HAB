@@ -3,10 +3,13 @@ package jisu.side.project.dto.user;
 import jisu.side.project.dto.Auth;
 import jisu.side.project.dto.AuthRepository;
 import jisu.side.project.dto.Role;
+import jisu.side.project.security.SecurityUser;
+import jisu.side.project.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -17,18 +20,37 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     @Autowired
     private final AuthRepository authRepository;
-//    @Autowired
-//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    @Autowired
+    private final PasswordEncoder bCryptEncoder;
+    @Autowired
+    private final TokenProvider tokenProvider;	// 추가
+
 
     public void insert(UserDto userDto, Role role) {
-//        authRepository.save(new Auth(userDto.getId(), Role.USER));
-//        String encoded = bCryptPasswordEncoder.encode(userDto.getPassword());
-//        userDto.setPassword(encoded);
-        User user = userDto.toEntity();
+        User user = userDto.toEntity(bCryptEncoder);
         Auth auth = userDto.toAuth(role);
         log.info("user, auth : {}, {}, ", user,auth);
         userRepository.save(user);
         authRepository.save(auth);
+    }
+    @Override
+    public SecurityUser login(UserDto userDto) {
+        User db = userRepository.findOneById(userDto.getId());
+        log.info("db : {}", db);
+
+        if(db.getEnabled()=='N'){ log.info("탈퇴한 계정입니다"); return null;}
+
+//        User user = userDto.toEntity(bCryptEncoder);
+        if(!bCryptEncoder.matches(userDto.getPassword(),db.getPassword())){
+            log.info("패스워드가 다릅니다");
+            return null;
+        }
+
+        log.info("패스워드가 일치합니다");
+        Role role = authRepository.findOneById(userDto.getId()).getRole();
+        String token = tokenProvider.createToken(String.format("%s:%s", userDto.getId(), role));
+
+        return new SecurityUser(userDto.getId(),token,role);
     }
 
     public User select(String username) {
@@ -43,29 +65,17 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePw(UserDto userDto) {
-//        String encoded = bCryptPasswordEncoder.encode(userDto.getPassword());
-//        userDto.setPassword(encoded);
         User user = userRepository.findOneById(userDto.getId());
-        if(user!=null) userRepository.save(userDto.toEntity());
+        if(user!=null) userRepository.save(userDto.toEntity(bCryptEncoder));
         log.info("changed {}",userDto);
     }
 
     @Override
     public void quit(UserDto userDto) {
-        User quit = userDto.toQuit();
+        User quit = userDto.toQuit(bCryptEncoder);
         userRepository.save(quit);
         log.info("quit {}",quit);
     }
 
-
-
-//    public User isAdmin(String username) {
-//        User select = userRepository.findOneById(username);
-//        Auth auth = authRepository.findOneById(username);
-//        Role role = (auth != null) ? auth.getRole() : null;
-//
-//        if(select.getEnabled() =='Y' && role==Role.ADMIN) return select;
-//        else return null;
-//    }
 
 }
