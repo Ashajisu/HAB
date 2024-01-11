@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="/favicon.ico">
+    <title>HAB</title>
+  <script defer src="/js/chunk-vendors.js"></script><script defer src="/js/app.js"></script></head>
+  <body>
+    <noscript>
+      <strong>We're sorry but HAB doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
+    </noscript>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  <script>
+  window.onload = function {
+      // 로그인 성공 후 서버에서 전달된 토큰
+      var token;
+
+      // 본문에서 토큰 추출
+      var json = JSON.parse(responseText); // responseText는 서버로부터의 응답 본문
+      token = json.token;
+
+      // 추출한 토큰을 세션에 저장
+      sessionStorage.setItem("jwtToken", token);
+    }
+</script>
+
+  </body>
+</html>

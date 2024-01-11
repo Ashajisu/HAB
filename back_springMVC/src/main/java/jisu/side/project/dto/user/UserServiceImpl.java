@@ -26,35 +26,35 @@ public class UserServiceImpl implements UserService {
     private final TokenProvider tokenProvider;	// 추가
 
 
-    public void insert(UserDto userDto, Role role) {
-        User user = userDto.toEntity(bCryptEncoder);
-        Auth auth = userDto.toAuth(role);
-        log.info("user, auth : {}, {}, ", user,auth);
-        userRepository.save(user);
+    public void insert(MemberDto memberDto, Role role) {
+        Member member = memberDto.toEntity(bCryptEncoder);
+        Auth auth = memberDto.toAuth(role);
+        log.info("member, auth : {}, {}, ", member,auth);
+        userRepository.save(member);
         authRepository.save(auth);
     }
     @Override
-    public SecurityUser login(UserDto userDto) {
-        User db = userRepository.findOneById(userDto.getId());
+    public SecurityUser login(MemberDto memberDto) {
+        Member db = userRepository.findOneById(memberDto.getId());
         log.info("db : {}", db);
 
         if(db.getEnabled()=='N'){ log.info("탈퇴한 계정입니다"); return null;}
 
-//        User user = userDto.toEntity(bCryptEncoder);
-        if(!bCryptEncoder.matches(userDto.getPassword(),db.getPassword())){
+//        Member user = memberDto.toEntity(bCryptEncoder);
+        if(!bCryptEncoder.matches(memberDto.getPassword(),db.getPassword())){
             log.info("패스워드가 다릅니다");
             return null;
         }
 
         log.info("패스워드가 일치합니다");
-        Role role = authRepository.findOneById(userDto.getId()).getRole();
-        String token = tokenProvider.createToken(String.format("%s:%s", userDto.getId(), role));
+        Role role = authRepository.findOneById(memberDto.getId()).getRole();
+        String token = tokenProvider.createToken(String.format("%s:%s", memberDto.getId(), role));
 
-        return new SecurityUser(userDto.getId(),token,role);
+        return new SecurityUser(memberDto.getId(),token,role);
     }
 
-    public User select(String username) {
-        User select = userRepository.findOneById(username);
+    public Member select(String username) {
+        Member select = userRepository.findOneById(username);
         if(select.getEnabled() =='Y') return select;
         else return null;
     }
@@ -64,15 +64,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void changePw(UserDto userDto) {
-        User user = userRepository.findOneById(userDto.getId());
-        if(user!=null) userRepository.save(userDto.toEntity(bCryptEncoder));
-        log.info("changed {}",userDto);
+    public void changePw(MemberDto memberDto) {
+        Member member = userRepository.findOneById(memberDto.getId());
+        if(member !=null) userRepository.save(memberDto.toEntity(bCryptEncoder));
+        log.info("changed {}", memberDto);
     }
 
     @Override
-    public void quit(UserDto userDto) {
-        User quit = userDto.toQuit(bCryptEncoder);
+    public void quit(MemberDto memberDto) {
+        Member quit = memberDto.toQuit(bCryptEncoder);
         userRepository.save(quit);
         log.info("quit {}",quit);
     }

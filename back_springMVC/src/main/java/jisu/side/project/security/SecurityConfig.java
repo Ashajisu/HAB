@@ -41,7 +41,8 @@ public class SecurityConfig {
 
     private final SecurityUserDetailsService securityUserDetailsService;
 
-    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler; //스프링 컨테이너에서 관리되는 싱글톤 객체 주입
+    private final JwtAuthenticationSuccessHandler jwtAuthenticationSuccessHandler;
+    //스프링 컨테이너에서 관리되는 싱글톤 객체 주입
     //상태를 가질 경우 다수의 요청이 동시에 들어올 때 충돌이 발생할 수 있습니다.
     //일반적으로 상태를 가지지 않고 오로지 요청에 대한 처리만을 하는 핸들러라면 싱글톤으로 등록하는 것이 일반적
 
@@ -50,7 +51,7 @@ public class SecurityConfig {
     @Bean //호출 시마다 새로운 객체 인스턴스를 생성
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    } //User service에서 사용해야함
+    } //Member service에서 사용해야함
 
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -76,14 +77,14 @@ public class SecurityConfig {
 //                        .requestMatchers("/login/**").permitAll()
                         .anyRequest().authenticated()
                 )
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 미사용
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) //세션 미사용
                 .formLogin(login -> login
 //                        .loginPage("/login") //로그인 폼을 제출 할 페이지
 //                        .loginProcessingUrl("/api/auth/sign/login") //폼 제출시 해당 URL로 POST 요청이 가게 되고 컨트롤러에서 직접 로그인을 처리
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .successHandler(jwtAuthenticationSuccessHandler)  //로그인 성공시 응답 헤더에 토큰 추가
-                        .defaultSuccessUrl("/", true)
+                        .successHandler(jwtAuthenticationSuccessHandler)  //로그인 성공시 응답 헤더에 토큰 추가, 지정되지 않으면 기본적으로 SavedRequestAwareAuthenticationSuccessHandler가 사용되어 세션에 저장된 이전 요청이 있으면 해당 요청으로 리다이렉트
+//                        .defaultSuccessUrl("/testJWT", true) //이걸 지워야 successHandler 작동함
                         .permitAll()
                 )
                 .logout(withDefaults())
@@ -99,7 +100,7 @@ public class SecurityConfig {
 
 //    @Bean
 //    public InMemoryUserDetailsManager userDetailsService() {
-//        UserDetails user = User.withDefaultPasswordEncoder()
+//        UserDetails user = Member.withDefaultPasswordEncoder()
 //                .username("userid")
 //                .password(passwordEncoder().encode("pw"))
 //                .roles("ADMIN")

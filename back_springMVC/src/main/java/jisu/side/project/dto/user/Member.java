@@ -8,7 +8,7 @@ import lombok.*;
 @Entity
 @Table(name = "users")
 @ToString
-public class User {
+public class Member {
 
     @Id
     @Column(name = "username")
@@ -21,9 +21,10 @@ public class User {
     private char enabled;
 
     @Builder
-    public User(String id, String password, char enabled){
+    public Member(String id, String password, char enabled){
         this.id = id;
         this.password = password;
         this.enabled = enabled;
     }
+
 }

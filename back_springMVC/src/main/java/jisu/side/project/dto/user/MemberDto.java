@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserDto {
+public class MemberDto {
 
     @NotBlank(message = "아이디는 필수 입력 값입니다.")
     private String id;
@@ -23,8 +23,8 @@ public class UserDto {
     private String password;
 
 
-    public User toEntity(PasswordEncoder encoder) {
-        return User.builder().id(id).password(encoder.encode(password)).enabled('Y').build();
+    public Member toEntity(PasswordEncoder encoder) {
+        return Member.builder().id(id).password(encoder.encode(password)).enabled('Y').build();
         //.auth(new Auth(id,role)).build();
     }
 
@@ -32,8 +32,8 @@ public class UserDto {
         return Auth.builder().id(id).role(role).build();
     }
 
-    public User toQuit(PasswordEncoder encoder){
-        return User.builder().id(id).password(encoder.encode(password)).enabled('N').build();
+    public Member toQuit(PasswordEncoder encoder){
+        return Member.builder().id(id).password(encoder.encode(password)).enabled('N').build();
     }
 
 }

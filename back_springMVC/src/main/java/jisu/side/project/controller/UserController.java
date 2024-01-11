@@ -2,8 +2,8 @@ package jisu.side.project.controller;
 
 import jisu.side.project.dto.Auth;
 import jisu.side.project.dto.Role;
-import jisu.side.project.dto.user.User;
-import jisu.side.project.dto.user.UserDto;
+import jisu.side.project.dto.user.Member;
+import jisu.side.project.dto.user.MemberDto;
 import jisu.side.project.dto.user.UserService;
 import jisu.side.project.security.SecurityUser;
 import lombok.extern.slf4j.Slf4j;
@@ -27,37 +27,37 @@ public class UserController {
 
     /** 가입 **/
     @PostMapping("/sign/user")
-    public String insertUser(@RequestBody UserDto userDto){
-        log.info("insert : {}",userDto.toString());
-        userService.insert(userDto, Role.USER);
-        return userDto.getId();
+    public String insertUser(@RequestBody MemberDto memberDto){
+        log.info("insert : {}", memberDto.toString());
+        userService.insert(memberDto, Role.USER);
+        return memberDto.getId();
     }
     @PostMapping("/sign/admin")
-    public String insertAdmin(@RequestBody UserDto userDto){
-        log.info("insert : {}",userDto.toString());
-        userService.insert(userDto, Role.ADMIN);
-        return userDto.getId();
+    public String insertAdmin(@RequestBody MemberDto memberDto){
+        log.info("insert : {}", memberDto.toString());
+        userService.insert(memberDto, Role.ADMIN);
+        return memberDto.getId();
     }
     /** 로그인 **/
     @PostMapping("/sign/login")
     public SecurityUser login (@RequestParam String id, @RequestParam String password){
         log.info("login proccess : {}, {}",id,password);
-        UserDto userDto = new UserDto(id,password);
-        SecurityUser signin = userService.login(userDto);
+        MemberDto memberDto = new MemberDto(id,password);
+        SecurityUser signin = userService.login(memberDto);
         return signin;
     }
 
     @GetMapping("/get/userid")
     public String getUser(Authentication authentication){
         log.info("authenticateion.getName : {}",authentication.getName());
-        User user = userService.select(authentication.getName());
-        return user.getId();
+        Member member = userService.select(authentication.getName());
+        return member.getId();
     }
 
     /** 확인 **/
     @GetMapping("/select/{username}")
     public String select (@PathVariable String username){
-        User ami = userService.select(username);
+        Member ami = userService.select(username);
         log.info("select : {}", ami);
         return ami.getId();
     }
@@ -72,15 +72,15 @@ public class UserController {
 
     /** 변경 **/
     @PostMapping("/change/pw")
-    public String changePw (@RequestBody UserDto userDto){
-        userService.changePw(userDto);
-        return userDto.getId();
+    public String changePw (@RequestBody MemberDto memberDto){
+        userService.changePw(memberDto);
+        return memberDto.getId();
     }
 
     @PostMapping("/change/quit")
-    public String quit (@RequestBody UserDto userDto){
-        userService.quit(userDto);
-        return userDto.getId();
+    public String quit (@RequestBody MemberDto memberDto){
+        userService.quit(memberDto);
+        return memberDto.getId();
     }
 
 
