@@ -13,7 +13,6 @@
 <script>
   // Vue components
   import MenuNav from "./component/menu.vue";
-  // import BS from "./view/BalanceSheet.vue";
   export default {
     name: "App",
 
