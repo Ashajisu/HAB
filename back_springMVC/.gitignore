@@ -26,4 +26,4 @@ build/
 .vscode/
 
 ### pront ###
-pront/*
+/pront/
